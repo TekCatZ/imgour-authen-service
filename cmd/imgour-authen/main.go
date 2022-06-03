@@ -1,1 +1,5 @@
-package imgour_authen
+package main
+
+func main() {
+
+}
