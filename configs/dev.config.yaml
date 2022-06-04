@@ -1,0 +1,4 @@
+db:
+  host: cluster0.lkbyhzy.mongodb.net/?retryWrites=true&w=majority
+  username: imgour-admin
+  password: F7eiE1XM5PLqNzhu
