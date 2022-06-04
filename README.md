@@ -1,6 +1,13 @@
 [![Contributors][contributors-shield]][contributors-url]
 [![AGPLv3 License][license-shield]][license-url]
 
+[![made-with-Go][language-shield]][language-url]
+[![GitHub go.mod Go version of a Go module][version-shield]][version-url]
+[![GoReportCard example][report-shield]][report-url]
+
+[![Maintenance][maintain-shield]][maintain-url]
+
+
 # Imgour Authenticate Service
 
 ## About the project
@@ -78,3 +85,11 @@ db:
 [contributors-url]: https://github.com/TekCatZ/imgour-authen-service/graphs/contributors
 [license-shield]: https://img.shields.io/github/license/TekCatZ/imgour-authen-service.svg?style=for-the-badge
 [license-url]: https://github.com/TekCatZ/imgour-authen-service/blob/master/LICENSE
+[maintain-shield]: https://img.shields.io/badge/Maintained%3F-yes-green.svg
+[maintain-url]: https://GitHub.com/TekCatZ/imgour-authen-service/graphs/commit-activity
+[version-shield]: https://img.shields.io/github/go-mod/go-version/TekCatZ/imgour-authen-service.svg
+[version-url]: https://github.com/TekCatZ/imgour-authen-service
+[language-shield]: https://img.shields.io/badge/Made%20with-Go-1f425f.svg
+[language-url]: https://go.dev/
+[report-shield]: https://goreportcard.com/badge/github.com/TekCatZ/imgour-authen-service
+[report-url]: https://goreportcard.com/report/github.com/TekCatZ/imgour-authen-service
