@@ -13,7 +13,7 @@ import (
 
 func Start(env string) {
 	config := Setup(env)
-	r := route.Setup()
+	r := route.Setup(config.Server)
 
 	err := r.Run(fmt.Sprintf(":%s", config.Server.Port))
 	if err != nil {
@@ -60,7 +60,7 @@ func authSetup(authConfig configs.AuthConfig, serverConfig configs.ServerConfig)
 	authEmailHandler := mail.GetAuthEmailHandler()
 
 	err := auth.Setup(
-		authConfig.ConnectionUri, authConfig.ApiKey, serverConfig.AppName, serverConfig.ApiDomain,
+		authConfig.ConnectionUri, authConfig.ApiKey, serverConfig.AppName, serverConfig.ServiceBaseUrl,
 		serverConfig.WebsiteDomain, authConfig.ApiPath, authConfig.WebsiteBasePath, authEmailHandler, authConfig.Social)
 	if err != nil {
 		log.Error(err)

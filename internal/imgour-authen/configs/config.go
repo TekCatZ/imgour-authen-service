@@ -19,11 +19,11 @@ type DbConfig struct {
 }
 
 type ServerConfig struct {
-	Port          string `mapstructure:"port"`
-	AppName       string `mapstructure:"app_name"`
-	ServiceName   string `mapstructure:"service_name"`
-	ApiDomain     string `mapstructure:"api_domain"`
-	WebsiteDomain string `mapstructure:"website_domain"`
+	Port           string `mapstructure:"port"`
+	AppName        string `mapstructure:"app_name"`
+	ServiceName    string `mapstructure:"service_name"`
+	WebsiteDomain  string `mapstructure:"website_domain"`
+	ServiceBaseUrl string `mapstructure:"service_base_url"`
 }
 
 type AuthConfig struct {

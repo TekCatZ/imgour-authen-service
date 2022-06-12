@@ -32,22 +32,20 @@ func Setup(connectionUri, apiKey, appName, apiDomain, websiteDomain, apiBasePath
 			WebsiteBasePath: &websiteBasePath,
 		},
 		RecipeList: []supertokens.Recipe{
-			thirdpartypasswordless.Init(getPasswordlessAuth(emailHandler)),
-			thirdpartypasswordless.Init(tplmodels.TypeInput{
-				Providers: getSocialAuthProvider(socialConfig),
-			}),
+			thirdpartypasswordless.Init(getAuthProviders(emailHandler, socialConfig)),
 			session.Init(nil), // initializes session features
 		},
 	})
 }
 
-func getPasswordlessAuth(emailHandler EmailHandler) tplmodels.TypeInput {
+func getAuthProviders(emailHandler EmailHandler, socialConfig imgourAuthen.SocialConfigs) tplmodels.TypeInput {
 	return tplmodels.TypeInput{
 		FlowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
 		ContactMethodEmail: plessmodels.ContactMethodEmailConfig{
 			Enabled:                  true,
 			CreateAndSendCustomEmail: emailHandler.Handle,
 		},
+		Providers: getSocialAuthProvider(socialConfig),
 	}
 }
 

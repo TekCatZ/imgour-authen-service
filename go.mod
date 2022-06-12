@@ -3,6 +3,7 @@ module github.com/TekCatZ/imgour-authen-service
 go 1.18
 
 require (
+	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.8.1
 	github.com/qiniu/qmgo v1.1.0
 	github.com/sirupsen/logrus v1.8.1
