@@ -52,8 +52,9 @@ The project is in developing status.
 │       ├── usecases
 │       │   ├── handlers
 │       │   └── middleware
-│       ├── app.go
-│       └── configs.go
+│       ├── configs
+│           └── configs.go
+│       └── app.go
 ├── deployments
 └── test
 ```
