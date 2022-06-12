@@ -1,6 +1,7 @@
 package mail
 
 import (
+	"crypto/tls"
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/configs"
 	"github.com/supertokens/supertokens-golang/supertokens"
 	"gopkg.in/gomail.v2"
@@ -40,6 +41,8 @@ func Setup(config configs.MailConfig) error {
 	sendCloser = &s
 
 	from = config.Username
+
+	dialer.TLSConfig = &tls.Config{InsecureSkipVerify: true} // disable this on prod
 
 	return nil
 }
