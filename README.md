@@ -79,6 +79,39 @@ db:
   host: <host url with options if any>
   username: <username>
   password: <password>
+
+server:
+  port: <server port>
+  app_name: imgour
+  service_name: imgour-authen
+
+auth:
+  connection_uri: <super token connection uri>
+  api_key: <super token api key>
+  api_path: <path to handle auth>
+  website_base_path: <path to handle auth on front end>
+  social:
+    google:
+      - web:
+          id: <Google Client ID>
+          secret: <Google Secret>
+      - mobile:
+          id: <Google Client ID>
+          secret: '' # Google Secret is not needed for mobile app
+    github:
+      - web:
+          id: <Github Client ID>
+          secret: <Github Secret>
+      - mobile:
+          id: <Github Client ID>
+          secret: <Github Secret>
+
+mail:
+  username: <Email username>
+  password: <Email password>
+  server: <Email server>
+  port: <Email server port>
+
 ```
 
 [contributors-shield]: https://img.shields.io/github/contributors/TekCatZ/imgour-authen-service.svg?style=for-the-badge
