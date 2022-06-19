@@ -37,12 +37,14 @@ The project is in developing status.
 │       └── main.go
 ├── configs
 ├── pkg
+├── generated
 ├── intertal
 │   └── imgour-authen
 │       ├── controllers
 │       │   ├── models
 │       │   │   ├── dto
 │       │   │   └── param
+│       │   ├── gRPC
 │       │   └── route
 │       ├── entities
 │       │   ├── models
@@ -66,6 +68,7 @@ A brief description of the layout:
 * `cmd` contains main packages, each subdirectory of `cmd` is a main package.
 * `pkg` contains sharable code between projects, use common senses.
 * `api` holds api related file like swagger, proto, etc.
+* `generated` holds generated files, like protobuf, etc.
 * `configs` contains config, config files' name convention: **\<env\>.config.yaml**, by default, env is dev, env is set when running the service
 * `internal` holds internal logics of each service. These logics should not be shared between service if any, same with `pkg`, use common senses. The "root" of services' logics should match the structure of `cmd`
 * `internal/<service>/controllers` contains logics and models related to the controller part, in this project, it's routing, param validation logic
