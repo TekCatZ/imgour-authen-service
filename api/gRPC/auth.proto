@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package auth;
+option go_package = "github.com/abc/auth";
+
+service AuthService {
+  rpc Validate(ValidateRequest) returns (ValidateResponse) {}
+  rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse) {}
+}
+
+message ValidateRequest {
+  string token = 1;
+}
+
+message ValidateResponse {
+  bool valid = 1;
+}
+
+message GetUserProfileRequest {
+  string token = 1;
+}
+
+message GetUserProfileResponse {
+  UserProfile profile = 1;
+}
+
+message UserProfile {
+  string name = 1;
+  string email = 2;
+  string picture = 3;
+}

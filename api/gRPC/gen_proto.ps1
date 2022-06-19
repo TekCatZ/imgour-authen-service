@@ -1,0 +1,1 @@
+protoc --go_out=../../generated/auth --go_opt=paths=source_relative --go-grpc_out=../../generated/auth --go-grpc_opt=paths=source_relative .\auth.proto
