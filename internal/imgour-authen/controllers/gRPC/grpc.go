@@ -12,11 +12,21 @@ import (
 	"net"
 )
 
+const CERTIFICATE = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhki...\n-----END PUBLIC KEY-----"
+
 type authServer struct {
 	pb.UnimplementedAuthServiceServer
 }
 
-func (authServer) Validate(ctx context.Context, req *pb.ValidateRequest) (*pb.ValidateResponse, error) {
+func (authServer) GetRoles(ctx context.Context, req *pb.GetRolesRequest) (*pb.GetRolesResponse, error) {
+	out := new(pb.GetRolesResponse)
+
+	uid := req.GetUid()
+	if uid == "" {
+		return nil, status.Errorf(codes.Unauthenticated, "Unauthenticated")
+	}
+
+	return out, nil
 	return nil, status.Errorf(codes.Unimplemented, "method Validate not implemented")
 }
 func (authServer) GetUserProfile(context.Context, *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {

@@ -4,16 +4,21 @@ package auth;
 option go_package = "github.com/abc/auth";
 
 service AuthService {
-  rpc Validate(ValidateRequest) returns (ValidateResponse) {}
+  rpc GetRoles(GetRolesRequest) returns (GetRolesResponse) {}
   rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse) {}
 }
 
-message ValidateRequest {
-  string token = 1;
+message GetRolesRequest {
+  string uid = 1;
 }
 
-message ValidateResponse {
-  bool valid = 1;
+message GetRolesResponse {
+  enum Role {
+    ADMIN = 0;
+    USER = 1;
+    DISABLED = 2;
+  }
+  Role role = 1;
 }
 
 message GetUserProfileRequest {
