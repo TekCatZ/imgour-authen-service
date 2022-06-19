@@ -89,6 +89,9 @@ server:
   app_name: imgour
   service_name: imgour-authen
 
+grpc-server:
+  port: <grpc server port>
+
 auth:
   connection_uri: <super token connection uri>
   api_key: <super token api key>
