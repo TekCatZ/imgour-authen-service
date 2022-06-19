@@ -10,6 +10,7 @@ type Config struct {
 	Server ServerConfig `mapstructure:"server"`
 	Auth   AuthConfig   `mapstructure:"auth"`
 	Mail   MailConfig   `mapstructure:"mail"`
+	Grpc   GrpcConfig   `mapstructure:"grpc-server"`
 }
 
 type DbConfig struct {
@@ -49,6 +50,10 @@ type SocialConfigs struct {
 type SocialConfig struct {
 	Id     string `mapstructure:"id"`
 	Secret string `mapstructure:"secret"`
+}
+
+type GrpcConfig struct {
+	Port string `mapstructure:"port"`
 }
 
 func LoadConfig(env string) *Config {

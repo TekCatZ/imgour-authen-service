@@ -6,9 +6,10 @@ import (
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/controllers/route/ping"
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/usecases/middleware"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-func Setup(serverConfig configs.ServerConfig) *gin.Engine {
+func Setup(serverConfig configs.ServerConfig) *http.Server {
 	router := gin.Default()
 
 	router.Use(middleware.CorsMiddleware(serverConfig))
@@ -20,5 +21,10 @@ func Setup(serverConfig configs.ServerConfig) *gin.Engine {
 		ping.Ping(apiV1)
 	}
 
-	return router
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: router,
+	}
+
+	return srv
 }
