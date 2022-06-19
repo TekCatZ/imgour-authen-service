@@ -9,6 +9,7 @@ import (
 
 var (
 	client *qmgo.Client
+	userDb *qmgo.Collection
 )
 
 func Setup(host, username, password string) {
@@ -16,6 +17,7 @@ func Setup(host, username, password string) {
 	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s", username, password, host)
 	var err error
 	client, err = qmgo.NewClient(ctx, &qmgo.Config{Uri: uri})
+	userDb = client.Database("imgour-authen").Collection("users")
 	if err != nil {
 		log.Error(err.Error())
 		panic(err)
