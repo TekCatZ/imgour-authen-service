@@ -8,6 +8,7 @@ import (
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/entities/services/auth"
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/entities/services/db"
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/entities/services/mail"
+	authHandler "github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/usecases/handler/auth"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"net"
@@ -97,10 +98,12 @@ func mailSetup(mailConfig configs.MailConfig) {
 
 func authSetup(authConfig configs.AuthConfig, serverConfig configs.ServerConfig) {
 	authEmailHandler := mail.GetAuthEmailHandler()
+	postSignUpHandler := authHandler.GetPostSignUpHandler()
 
 	err := auth.Setup(
 		authConfig.ConnectionUri, authConfig.ApiKey, serverConfig.AppName, serverConfig.ServiceBaseUrl,
-		serverConfig.WebsiteDomain, authConfig.ApiPath, authConfig.WebsiteBasePath, authEmailHandler, authConfig.Social)
+		serverConfig.WebsiteDomain, authConfig.ApiPath, authConfig.WebsiteBasePath, authEmailHandler,
+		postSignUpHandler, authConfig.Social)
 	if err != nil {
 		log.Error(err)
 		panic(err)

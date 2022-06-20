@@ -16,8 +16,12 @@ type EmailHandler interface {
 		preAuthSessionId string, userContext supertokens.UserContext) error
 }
 
+type PostSignUpHandler interface {
+	Handle(user tplmodels.User)
+}
+
 func Setup(connectionUri, apiKey, appName, apiDomain, websiteDomain, apiBasePath, websiteBasePath string,
-	emailHandler EmailHandler, socialConfig imgourAuthen.SocialConfigs) error {
+	emailHandler EmailHandler, postSignUpHandler PostSignUpHandler, socialConfig imgourAuthen.SocialConfigs) error {
 	return supertokens.Init(supertokens.TypeInput{
 		Supertokens: &supertokens.ConnectionInfo{
 			// These are the connection details of the app you created on supertokens.com
@@ -32,13 +36,14 @@ func Setup(connectionUri, apiKey, appName, apiDomain, websiteDomain, apiBasePath
 			WebsiteBasePath: &websiteBasePath,
 		},
 		RecipeList: []supertokens.Recipe{
-			thirdpartypasswordless.Init(getAuthProviders(emailHandler, socialConfig)),
+			thirdpartypasswordless.Init(getAuthProviders(emailHandler, postSignUpHandler, socialConfig)),
 			session.Init(nil), // initializes session features
 		},
 	})
 }
 
-func getAuthProviders(emailHandler EmailHandler, socialConfig imgourAuthen.SocialConfigs) tplmodels.TypeInput {
+func getAuthProviders(emailHandler EmailHandler, postSignUpHandler PostSignUpHandler,
+	socialConfig imgourAuthen.SocialConfigs) tplmodels.TypeInput {
 	return tplmodels.TypeInput{
 		FlowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
 		ContactMethodEmail: plessmodels.ContactMethodEmailConfig{
@@ -46,6 +51,39 @@ func getAuthProviders(emailHandler EmailHandler, socialConfig imgourAuthen.Socia
 			CreateAndSendCustomEmail: emailHandler.Handle,
 		},
 		Providers: getSocialAuthProvider(socialConfig),
+		Override: &tplmodels.OverrideStruct{
+			APIs: func(originalImplementation tplmodels.APIInterface) tplmodels.APIInterface {
+
+				// create a copy of the original function
+				originalConsumeCodePOST := originalImplementation.ConsumeCodePOST
+
+				// override the sign in up API
+				*originalImplementation.ConsumeCodePOST = func(userInput *plessmodels.UserInputCodeWithDeviceID, linkCode *string, preAuthSessionID string, options plessmodels.APIOptions, userContext supertokens.UserContext) (tplmodels.ConsumeCodePOSTResponse, error) {
+
+					// First we call the original implementation of ConsumeCodeUpPOST.
+					response, err := (*originalConsumeCodePOST)(userInput, linkCode, preAuthSessionID, options, userContext)
+					if err != nil {
+						return tplmodels.ConsumeCodePOSTResponse{}, err
+					}
+
+					if response.OK != nil {
+
+						// user object contains the ID and email or phone number
+						user := response.OK.User
+
+						if response.OK.CreatedNewUser {
+							postSignUpHandler.Handle(user)
+						} else {
+							// ignore
+						}
+
+					}
+					return response, nil
+				}
+
+				return originalImplementation
+			},
+		},
 	}
 }
 

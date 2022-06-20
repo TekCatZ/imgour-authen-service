@@ -8,17 +8,18 @@ import (
 )
 
 type Role int64
+
 const (
 	Admin Role = iota
 	User
 )
 
 type UserProfile struct {
-	Uid		string `bson:"uid"`
-	Name   	string `bson:"name"`
-	Email   string `bson:"e-mail" validate:"required,email"`
+	Uid         string `bson:"uid"`
+	Name        string `bson:"name"`
+	Email       string `bson:"email" validate:"required,email"`
 	PhoneNumber string `bson:"phone_number"`
-	Roles []Role `bson:"roles"`
+	Roles       []Role `bson:"roles"`
 }
 
 func CreateUserProfile(userProfile UserProfile) (*UserProfile, error) {
@@ -37,16 +38,26 @@ func CreateUserProfile(userProfile UserProfile) (*UserProfile, error) {
 func UpdateUserProfile(newUserProfile UserProfile) (bool, error) {
 	ctx := context.Background()
 	uid := newUserProfile.Uid
+
+	updateBsonObject := bson.M{}
+	if newUserProfile.Name != "" {
+		updateBsonObject["name"] = newUserProfile.Name
+	}
+	if newUserProfile.Email != "" {
+		updateBsonObject["email"] = newUserProfile.Email
+	}
+	if newUserProfile.PhoneNumber != "" {
+		updateBsonObject["phone_number"] = newUserProfile.PhoneNumber
+	}
+	if len(newUserProfile.Roles) > 0 {
+		updateBsonObject["roles"] = newUserProfile.Roles
+	}
+
 	err := userDb.UpdateOne(
-		ctx, 
+		ctx,
 		bson.M{"uid": uid},
 		bson.D{
-			{"$set", bson.M{
-				"name": newUserProfile.Name,
-				"email": newUserProfile.Email,
-				"phone_number": newUserProfile.PhoneNumber,
-				"roles": newUserProfile.Roles,
-			}},
+			{"$set", updateBsonObject},
 		},
 	)
 	if err != nil {
@@ -59,7 +70,7 @@ func UpdateUserProfile(newUserProfile UserProfile) (bool, error) {
 func FindUserProfileByUid(uid string) (*UserProfile, error) {
 	ctx := context.Background()
 	var err error
-	userProfile := UserProfile{} 
+	userProfile := UserProfile{}
 	err = userDb.Find(ctx, bson.M{"uid": uid}).One(&userProfile)
 	if err != nil {
 		return nil, err
@@ -71,7 +82,7 @@ func FindUserProfileByUid(uid string) (*UserProfile, error) {
 func FindAllUserProfile() ([]UserProfile, error) {
 	ctx := context.Background()
 	var err error
-	userProfiles := []UserProfile{} 
+	userProfiles := []UserProfile{}
 	err = userDb.Find(ctx, bson.M{}).All(&userProfiles)
 	if err != nil {
 		return nil, err
@@ -80,10 +91,10 @@ func FindAllUserProfile() ([]UserProfile, error) {
 	return userProfiles, nil
 }
 
-func GetRolesByUid(uid string)  ([]Role, error) {
+func GetRolesByUid(uid string) ([]Role, error) {
 	ctx := context.Background()
 	var err error
-	userProfile := UserProfile{} 
+	userProfile := UserProfile{}
 	err = userDb.Find(ctx, bson.M{"uid": uid}).One(&userProfile)
 	if err != nil {
 		return nil, err
@@ -99,7 +110,7 @@ func UpdateRolesUserProfile(uid string, newRoles []Role) (bool, error) {
 		return false, emptyErr
 	}
 	err := userDb.UpdateOne(
-		ctx, 
+		ctx,
 		bson.M{"uid": uid},
 		bson.D{
 			{"$set", bson.M{
@@ -118,7 +129,7 @@ func RemoveRolesUserProfile(uid string) (bool, error) {
 	ctx := context.Background()
 	var err error
 	err = userDb.UpdateOne(
-		ctx, 
+		ctx,
 		bson.M{"uid": uid},
 		bson.D{
 			{"$set", bson.M{
