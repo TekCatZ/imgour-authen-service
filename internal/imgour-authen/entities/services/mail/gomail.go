@@ -1,10 +1,12 @@
 package mail
 
 import (
+	"bytes"
 	"crypto/tls"
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/configs"
 	"github.com/supertokens/supertokens-golang/supertokens"
 	"gopkg.in/gomail.v2"
+	"html/template"
 	"strconv"
 )
 
@@ -19,10 +21,43 @@ type EmailHandler interface {
 		preAuthSessionId string, userContext supertokens.UserContext) error
 }
 
+type AuthMailParam struct {
+	OTP string
+	URL string
+	TTL string
+}
+
 type authMailHandler struct{}
 
 func (authMailHandler) Handle(email string, userInputCode, urlWithLinkCode *string, codeLifetime uint64,
 	preAuthSessionId string, userContext supertokens.UserContext) error {
+	// convert codeLifetime (milliseconds) to duration string with format "x minutes"
+	duration := strconv.Itoa(int(codeLifetime/1000/60)) + " minutes"
+
+	params := &AuthMailParam{
+		OTP: *userInputCode,
+		URL: *urlWithLinkCode,
+		TTL: duration,
+	}
+
+	// read template from file in web/template
+	t, err := template.ParseFiles("web/template/auth_mail.tmpl.html")
+	if err != nil {
+		return err
+	}
+
+	// execute template and write to buffer
+	buf := new(bytes.Buffer)
+	err = t.Execute(buf, params)
+	if err != nil {
+		return err
+	}
+
+	err = SendEmail(email, "Imgour Authen - Verify your account", buf.String())
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

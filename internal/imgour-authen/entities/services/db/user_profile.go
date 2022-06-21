@@ -3,26 +3,12 @@ package db
 import (
 	"context"
 	"errors"
+	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/entities/models"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-type Role int64
-
-const (
-	Admin Role = iota
-	User
-)
-
-type UserProfile struct {
-	Uid         string `bson:"uid"`
-	Name        string `bson:"name"`
-	Email       string `bson:"email" validate:"required,email"`
-	PhoneNumber string `bson:"phone_number"`
-	Roles       []Role `bson:"roles"`
-}
-
-func CreateUserProfile(userProfile UserProfile) (*UserProfile, error) {
+func CreateUserProfile(userProfile models.UserProfile) (*models.UserProfile, error) {
 	ctx := context.Background()
 	doc, err := userDb.InsertOne(ctx, userProfile)
 	if err != nil {
@@ -35,7 +21,7 @@ func CreateUserProfile(userProfile UserProfile) (*UserProfile, error) {
 	return &userProfile, nil
 }
 
-func UpdateUserProfile(newUserProfile UserProfile) (bool, error) {
+func UpdateUserProfile(newUserProfile models.UserProfile) (bool, error) {
 	ctx := context.Background()
 	uid := newUserProfile.Uid
 
@@ -67,10 +53,10 @@ func UpdateUserProfile(newUserProfile UserProfile) (bool, error) {
 	return true, nil
 }
 
-func FindUserProfileByUid(uid string) (*UserProfile, error) {
+func FindUserProfileByUid(uid string) (*models.UserProfile, error) {
 	ctx := context.Background()
 	var err error
-	userProfile := UserProfile{}
+	userProfile := models.UserProfile{}
 	err = userDb.Find(ctx, bson.M{"uid": uid}).One(&userProfile)
 	if err != nil {
 		return nil, err
@@ -79,10 +65,10 @@ func FindUserProfileByUid(uid string) (*UserProfile, error) {
 	return &userProfile, nil
 }
 
-func FindAllUserProfile() ([]UserProfile, error) {
+func FindAllUserProfile() ([]models.UserProfile, error) {
 	ctx := context.Background()
 	var err error
-	userProfiles := []UserProfile{}
+	var userProfiles []models.UserProfile
 	err = userDb.Find(ctx, bson.M{}).All(&userProfiles)
 	if err != nil {
 		return nil, err
@@ -91,10 +77,10 @@ func FindAllUserProfile() ([]UserProfile, error) {
 	return userProfiles, nil
 }
 
-func GetRolesByUid(uid string) ([]Role, error) {
+func GetRolesByUid(uid string) ([]models.Role, error) {
 	ctx := context.Background()
 	var err error
-	userProfile := UserProfile{}
+	userProfile := models.UserProfile{}
 	err = userDb.Find(ctx, bson.M{"uid": uid}).One(&userProfile)
 	if err != nil {
 		return nil, err
@@ -103,7 +89,7 @@ func GetRolesByUid(uid string) ([]Role, error) {
 	return userProfile.Roles, nil
 }
 
-func UpdateRolesUserProfile(uid string, newRoles []Role) (bool, error) {
+func UpdateRolesUserProfile(uid string, newRoles []models.Role) (bool, error) {
 	ctx := context.Background()
 	emptyErr := errors.New("invalid roles array")
 	if len(newRoles) == 0 {
@@ -133,7 +119,7 @@ func RemoveRolesUserProfile(uid string) (bool, error) {
 		bson.M{"uid": uid},
 		bson.D{
 			{"$set", bson.M{
-				"roles": []Role{},
+				"roles": []models.Role{},
 			}},
 		},
 	)

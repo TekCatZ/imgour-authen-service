@@ -1,8 +1,8 @@
 package auth
 
 import (
+	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/entities/models"
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/entities/repositories"
-	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/entities/services/db"
 	"github.com/sirupsen/logrus"
 	"github.com/supertokens/supertokens-golang/recipe/thirdpartypasswordless/tplmodels"
 )
@@ -14,13 +14,13 @@ type PostSignUpHandler interface {
 type signUpHandler struct{}
 
 func (*signUpHandler) Handle(user tplmodels.User) {
-	userDao := &db.UserProfile{
+	userDao := &models.UserProfile{
 		Uid:         user.ID,
 		Name:        "",
 		Email:       *user.Email,
 		PhoneNumber: *user.PhoneNumber,
-		Roles: []db.Role{
-			db.User,
+		Roles: []models.Role{
+			models.User,
 		},
 	}
 	_, err := repositories.SaveUser(*userDao)
