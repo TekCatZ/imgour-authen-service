@@ -89,7 +89,7 @@ func GetRolesByUid(uid string) ([]models.Role, error) {
 	return userProfile.Roles, nil
 }
 
-func UpdateRolesUserProfile(uid string, newRoles []models.Role) (bool, error) {
+func AddRolesUserProfile(uid string, newRoles []models.Role) (bool, error) {
 	ctx := context.Background()
 	emptyErr := errors.New("invalid roles array")
 	if len(newRoles) == 0 {
