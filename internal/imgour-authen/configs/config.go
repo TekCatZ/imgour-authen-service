@@ -13,10 +13,16 @@ type Config struct {
 	Grpc   GrpcConfig   `mapstructure:"grpc-server"`
 }
 
+type CollectionsName struct {
+	Users string `mapstructure:"users"`
+}
+
 type DbConfig struct {
-	Host     string `mapstructure:"host"`
-	Username string `mapstructure:"username"`
-	Password string `mapstructure:"password"`
+	Host       string          `mapstructure:"host"`
+	Username   string          `mapstructure:"username"`
+	Password   string          `mapstructure:"password"`
+	DbName     string          `mapstructure:"dbname"`
+	Collection CollectionsName `mapstructure:"collections_name"`
 }
 
 type ServerConfig struct {

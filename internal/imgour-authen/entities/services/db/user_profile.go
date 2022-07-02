@@ -6,6 +6,7 @@ import (
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/common"
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/entities/models"
 	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/entities/models"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -100,7 +101,7 @@ func GetRolesByUid(uid string) ([]models.Role, error) {
 	return userProfile.Roles, nil
 }
 
-func UpdateRolesUserProfile(uid string, newRoles []models.Role) (bool, error) {
+func AddRolesUserProfile(uid string, newRoles []models.Role) (bool, error) {
 	ctx := context.Background()
 	emptyErr := errors.New("invalid roles array")
 	if len(newRoles) == 0 {
