@@ -61,7 +61,7 @@ func (authMailHandler) Handle(email string, userInputCode, urlWithLinkCode *stri
 	return nil
 }
 
-func Setup(config configs.MailConfig) error {
+func Setup(config *configs.MailConfig) error {
 	// parse config.Port to int and return error if not success
 	port, err := strconv.Atoi(config.Port)
 	if err != nil {

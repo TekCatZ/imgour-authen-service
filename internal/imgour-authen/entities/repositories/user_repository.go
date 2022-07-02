@@ -24,3 +24,13 @@ func GetUser(uid string) (*models.UserProfile, error) {
 
 	return profile, nil
 }
+
+func GetRolesByUid(uid string) ([]models.Role, error) {
+	// Get user from database
+	roles, err := db.GetRolesByUid(uid)
+	if err != nil {
+		return nil, err
+	}
+
+	return roles, nil
+}

@@ -13,7 +13,7 @@ var (
 	userDb *qmgo.Collection
 )
 
-func Setup(dbConfig configs.DbConfig) {
+func Setup(dbConfig *configs.DbConfig) {
 	ctx := context.Background()
 	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s", dbConfig.Username, dbConfig.Password, dbConfig.Host)
 	var err error

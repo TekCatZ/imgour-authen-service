@@ -17,7 +17,7 @@ func Setup(serverConfig configs.ServerConfig) *http.Server {
 
 	apiV1 := router.Group("/api/v1", middleware.VerifySession(nil))
 	{
-		authen.Setup(apiV1)
+		profile.Setup(apiV1)
 	}
 
 	ping.Ping(router.Group(""))

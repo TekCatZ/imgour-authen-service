@@ -64,9 +64,9 @@ func StartGrpcServer(s *grpc.Server, lis *net.Listener) {
 func Setup(env string) *configs.Config {
 	config := configs.LoadConfig(env)
 	logInit()
-	dbSetup(config.Db.Host, config.Db.Username, config.Db.Password)
-	mailSetup(config.Mail)
-	authSetup(config.Auth, config.Server)
+	dbSetup(&config.Db)
+	mailSetup(&config.Mail)
+	authSetup(&config.Auth, &config.Server)
 
 	return config
 }
@@ -83,12 +83,12 @@ func logInit() {
 	log.SetLevel(log.InfoLevel)
 }
 
-func dbSetup(host, username, password string) {
-	db.Setup(host, username, password)
+func dbSetup(dbConfig *configs.DbConfig) {
+	db.Setup(dbConfig)
 	db.Ping()
 }
 
-func mailSetup(mailConfig configs.MailConfig) {
+func mailSetup(mailConfig *configs.MailConfig) {
 	err := mail.Setup(mailConfig)
 	if err != nil {
 		log.Error(err)
@@ -96,7 +96,7 @@ func mailSetup(mailConfig configs.MailConfig) {
 	}
 }
 
-func authSetup(authConfig configs.AuthConfig, serverConfig configs.ServerConfig) {
+func authSetup(authConfig *configs.AuthConfig, serverConfig *configs.ServerConfig) {
 	authEmailHandler := mail.GetAuthEmailHandler()
 	postSignUpHandler := authHandler.GetPostSignUpHandler()
 

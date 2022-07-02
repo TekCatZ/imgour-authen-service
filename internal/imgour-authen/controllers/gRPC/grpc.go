@@ -26,14 +26,12 @@ func (authServer) GetRoles(_ context.Context, req *pb.GetRolesRequest) (*pb.GetR
 		return nil, status.Errorf(codes.InvalidArgument, "UID is required")
 	}
 
-	user, err := repositories.GetUser(uid)
+	roles, err := repositories.GetRolesByUid(uid)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Error getting user: %v", err)
 	}
 
-	resultRoles := parseRole(user)
-
-	out.Roles = resultRoles
+	out.Roles = parseRole(roles)
 	return out, nil
 }
 func (authServer) GetUserProfile(_ context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
@@ -49,7 +47,7 @@ func (authServer) GetUserProfile(_ context.Context, req *pb.GetUserProfileReques
 		return nil, status.Errorf(codes.Internal, "Error getting user: %v", err)
 	}
 
-	resultRoles := parseRole(user)
+	resultRoles := parseRole(user.Roles)
 
 	out.Profile = &pb.UserProfile{
 		Uid:   user.Uid,
@@ -62,9 +60,9 @@ func (authServer) GetUserProfile(_ context.Context, req *pb.GetUserProfileReques
 	return out, nil
 }
 
-func parseRole(user *models.UserProfile) []pb.Role {
+func parseRole(roles []models.Role) []pb.Role {
 	var resultRoles []pb.Role
-	for _, role := range user.Roles {
+	for _, role := range roles {
 		resultRoles = append(resultRoles, pb.Role(role))
 	}
 	return resultRoles

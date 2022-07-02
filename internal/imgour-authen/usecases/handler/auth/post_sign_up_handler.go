@@ -23,7 +23,7 @@ func (*signUpHandler) Handle(user tplmodels.User) {
 			models.User,
 		},
 	}
-	_, err := repositories.SaveUser(*userDao)
+	_, err := repositories.SaveUser(userDao)
 	if err != nil {
 		logrus.Errorln("Error saving user: ", err)
 		return

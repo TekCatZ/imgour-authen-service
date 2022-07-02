@@ -6,7 +6,6 @@ import (
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/common"
 	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/entities/models"
 	"go.mongodb.org/mongo-driver/mongo"
-	"github.com/TekCatZ/imgour-authen-service/internal/imgour-authen/entities/models"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
