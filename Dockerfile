@@ -14,7 +14,7 @@ RUN go build -o /bin/main github.com/TekCatZ/imgour-authen-service/cmd/imgour-au
 
 # run stage
 FROM alpine
-EXPOSE 8018
+EXPOSE 8018 9812
 WORKDIR /app
 COPY --from=build-env /bin/main /app/
 COPY /configs /app/

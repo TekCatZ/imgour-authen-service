@@ -1,0 +1,29 @@
+# build stage
+FROM golang:1.18-alpine AS build-env
+RUN mkdir ../home/app
+WORKDIR /../home/app
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
+COPY api ./api
+COPY cmd ./cmd
+COPY internal ./internal
+COPY pkg ./pkg
+COPY test ./test
+RUN go build -o /bin/main github.com/TekCatZ/imgour-authen-service/cmd/imgour-authen
+RUN go build -o /bin/config-downloader github.com/TekCatZ/imgour-authen-service/cmd/config-downloader
+
+# run stage
+FROM alpine
+ENV S3_BUCKET_NAME ""
+ENV S3_REGION ""
+ENV S3_BUCKET_ACCESS_KEY_ID ""
+ENV S3_BUCKET_SECRET_ACCESS_KEY ""
+ENV CONFIG_NAME ""
+EXPOSE 8018 9812
+WORKDIR /app
+COPY --from=build-env /bin/main /app/
+COPY --from=build-env /bin/config-downloader /app/
+COPY startup.sh /app/
+RUN chmod +x /startup.sh
+ENTRYPOINT ["./startup.sh", "-b $S3_BUCKET_NAME", "-k $S3_BUCKET_ACCESS_KEY_ID", "-s $S3_BUCKET_SECRET_ACCESS_KEY", "-f $CONFIG_NAME", "-r $S3_REGION"]
